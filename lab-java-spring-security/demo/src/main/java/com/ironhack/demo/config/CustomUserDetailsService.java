@@ -9,15 +9,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    private final AuthorRepository userRepository;
+    private final AuthorRepository authorRepository;
 
     public CustomUserDetailsService(AuthorRepository userRepository) {
-        this.userRepository = userRepository;
+        this.authorRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Author author = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Author not found"));
+        Author author = authorRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Author not found"));
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(author.getEmail())

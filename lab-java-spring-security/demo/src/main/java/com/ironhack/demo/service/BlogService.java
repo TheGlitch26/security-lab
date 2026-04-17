@@ -7,6 +7,7 @@ import com.ironhack.demo.entity.Author;
 import com.ironhack.demo.entity.Blog;
 import com.ironhack.demo.repository.AuthorRepository;
 import com.ironhack.demo.repository.BlogRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class BlogService {
         return blogRepository.findAll();
     }
 
+    @Transactional
     public Blog create(BlogRequest request){
         Blog createdBlog = new Blog();
         Author foundAuthor = authorRepository.findById(request.getAuthorId())
@@ -41,6 +43,7 @@ public class BlogService {
         return blogRepository.save(createdBlog);
     }
 
+    @Transactional
     public Blog update(Long id, BlogRequest request){
         Blog foundBlog = blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Blog not found"));
@@ -65,5 +68,11 @@ public class BlogService {
         Blog foundBlog = blogRepository.findById(id)
                         .orElseThrow(() -> new IllegalArgumentException("Blog not found"));
         blogRepository.delete(foundBlog);
+    }
+
+    public boolean isOwner(Long blogId, String email){
+        Blog foundBlog = blogRepository.findById(blogId)
+                .orElseThrow(() -> new IllegalArgumentException("Blog not found"));
+        return foundBlog.getAuthor().getEmail().equals(email);
     }
 }

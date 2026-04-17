@@ -23,7 +23,7 @@ public class Author {
     @Column(length = 200)
     private String email;
 
-    @Column
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)

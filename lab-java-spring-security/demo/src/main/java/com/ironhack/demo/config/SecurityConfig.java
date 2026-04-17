@@ -28,11 +28,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/authors").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/blogs").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/authors/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .headers(headers -> headers.frameOptions(frame -> frame.disable()));
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+//                        .anyRequest().authenticated()
+                );
 
         return http.build();
     }

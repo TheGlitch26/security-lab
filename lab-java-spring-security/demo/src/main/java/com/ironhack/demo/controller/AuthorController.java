@@ -5,6 +5,7 @@ import com.ironhack.demo.entity.Author;
 import com.ironhack.demo.service.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,9 +45,11 @@ public class AuthorController {
         return authorService.update(id, request);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public void delete(@RequestParam Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         authorService.delete(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

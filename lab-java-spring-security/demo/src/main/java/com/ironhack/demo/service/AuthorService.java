@@ -4,6 +4,7 @@ package com.ironhack.demo.service;
 import com.ironhack.demo.dto.AuthorRequest;
 import com.ironhack.demo.entity.Author;
 import com.ironhack.demo.repository.AuthorRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class AuthorService {
         return authorRepository.findById(id).orElseThrow(() -> new NullPointerException("Author not found"));
     }
 
+    @Transactional
     public Author create(AuthorRequest request){
         if(authorRepository.existsByEmail(request.getEmail())){
             throw new IllegalArgumentException("An author with this email already exists");
@@ -44,18 +46,20 @@ public class AuthorService {
         return authorRepository.save(createdAuthor);
     }
 
+    @Transactional
     public Author update(Long id, AuthorRequest request){
         Author author = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
-        if(request.getEmail() != null && request.getEmail().isBlank()){
+        if(request.getEmail() != null){
             author.setEmail(request.getEmail());
         }
-        if(request.getFullName() != null && request.getFullName().isBlank()){
+        if(request.getFullName() != null){
             author.setFullName(request.getFullName());
         }
-        if(request.getPassword() != null && request.getPassword().isBlank()){
+        if(request.getPassword() != null){
             author.setPassword(passwordEncoder.encode(request.getPassword()));
         }
-        return authorRepository.save(author);
+        authorRepository.save(author);
+        return author;
     }
 
     public void delete(Long id){
