@@ -1,9 +1,9 @@
 package com.ironhack.demo.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.rmi.dgc.Lease;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,12 +17,15 @@ public class Blog {
     @Column(length = 100)
     private String title;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    @Column(length = 1000)
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private User author;
+    private Author author;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void onCreate(){
@@ -68,5 +71,21 @@ public class Blog {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 }
